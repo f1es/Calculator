@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator"
+        xmlns:models="clr-namespace:Calculator.MVVM.Models"
+        xmlns:viewModels="clr-namespace:Calculator.MVVM.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" 
         Height="550" Width="900"
@@ -13,7 +15,9 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen">
 
-    
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Window.DataContext>
     
     <Border Background="#17171C"
             CornerRadius="24">
@@ -32,7 +36,8 @@
 
             <!--Upper panel-->
             <Border Background="#FF111119" Grid.ColumnSpan="3"
-                    CornerRadius="24 24 0 0">
+                    CornerRadius="24 24 0 0"
+                    models:DragHelper.EnableDrag="True">
 
                 <Grid>
 
@@ -48,13 +53,15 @@
                     <WrapPanel HorizontalAlignment="Right">
                         <!--Minimize-->
                         <Button Style="{StaticResource UpperPanelButton}"
-                            Content="_">
+                                Content="_"
+                                Command="{Binding MinimizeCommand}">
                         </Button>
 
-                        <!--Cross-->
+                        <!--Close-->
                         <Button Style="{StaticResource UpperPanelButton}"
-                            Background="#FF421A1A"
-                            Content="X">
+                                Background="#FF421A1A"
+                                Content="X"
+                                Command="{Binding CloseCommand}">
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="0 24 0 0"/>
@@ -151,7 +158,7 @@
                          Foreground="#FFFFFF"
                          TextAlignment="Right"
                          TextWrapping="Wrap"
-                         Text="12312131,23312312123213231123123wwrwe1"
+                         Text="{Binding Expression}"
                          BorderThickness="0"/>
 
                 <UniformGrid Grid.Row="1"
@@ -160,9 +167,12 @@
                      Height="300"
                      Width="250">
 
-                    <Button Content="C" Style="{StaticResource LightGrayButton}"/>
-                    <Button Content="(" Style="{StaticResource GrayButton}"/>
-                    <Button Content=")" Style="{StaticResource GrayButton}"/>
+                    <Button Content="C" Style="{StaticResource LightGrayButton}"
+                            Command="{Binding ClearExpressionCommand}"/>
+                    <Button Content="(" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintOpenBracketCommand}"/>
+                    <Button Content=")" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintCloseBracketCommand}"/>
                     <Button Content="÷" Style="{StaticResource PurpleButton}"/>
                     <Button Content="√" Style="{StaticResource GrayButton}"/>
                     <Button Content="^" Style="{StaticResource GrayButton}"/>
@@ -179,7 +189,8 @@
                     <Button Content="1" Style="{StaticResource GrayButton}"/>
                     <Button Content="2" Style="{StaticResource GrayButton}"/>
                     <Button Content="3" Style="{StaticResource GrayButton}"/>
-                    <Button Content="=" Style="{StaticResource PurpleButton}"/>
+                    <Button Content="=" Style="{StaticResource PurpleButton}"
+                            Command="{Binding CalculateCommand}"/>
                     <Button Content="." Style="{StaticResource GrayButton}"/>
                     <Button Content="0" Style="{StaticResource GrayButton}"/>
                 </UniformGrid>
