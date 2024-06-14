@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Calculator.MVVM.Models
 {
-	public class PostfixExpression
+    public class PostfixExpression
 	{
 		private string _infixExpression;
 		private Queue<ExpressionValue> _expression;
@@ -44,7 +40,8 @@ namespace Calculator.MVVM.Models
 		{
 			_infixExpression = expression;
 			var separatedExpression = SeparateExpression(expression);
-			ToPostfix(separatedExpression);
+            Validate(separatedExpression);
+            ToPostfix(separatedExpression);
 		}
 		public static PostfixExpression Parse(string expression)
 		{
@@ -118,7 +115,48 @@ namespace Calculator.MVVM.Models
 
 			return separatedExpression;
 		}
-		private void ToPostfix(Queue<ExpressionValue> normalExpression)
+        private void Validate(Queue<ExpressionValue> separatedExpression)
+        {
+            int bracketCounter = 0;
+            ExpressionValue previousExpressionValue = new ExpressionValue("0", ExpressionValueType.Number);
+            foreach (var expression in separatedExpression)
+            {
+                switch (expression.ValueType)
+                {
+                    case ExpressionValueType.Variable:
+                        throw new NotImplementedException();
+                        break;
+                    case ExpressionValueType.Operator:
+
+                        if (previousExpressionValue.ValueType == ExpressionValueType.Operator)
+                            throw new Exception("Operators shouldn't repeat");
+
+                        break;
+                    case ExpressionValueType.Number:
+
+                        if (!double.TryParse(expression.Value, out double a))
+                            throw new Exception("Incorrect number");
+
+                        break;
+                    case ExpressionValueType.Bracket:
+
+                        if (expression.Value == "(")
+                            bracketCounter++;
+                        else
+                            bracketCounter--;
+
+                        break;
+                }
+
+                previousExpressionValue = expression;
+            }
+
+            if (bracketCounter > 0)
+                throw new Exception("All brackets should be closed");
+            else if (bracketCounter < 0)
+                throw new Exception("Unnecessary bracket");
+        }
+        private void ToPostfix(Queue<ExpressionValue> normalExpression)
 		{
 			Queue<ExpressionValue> postfixExpression = new Queue<ExpressionValue>();
 			Stack<ExpressionValue> operators = new Stack<ExpressionValue>();
