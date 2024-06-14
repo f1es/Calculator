@@ -5,8 +5,271 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"> 
-    <Grid>
+        Title="MainWindow" 
+        Height="550" Width="900"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen">
+
+    
+    
+    <Border Background="#17171C"
+            CornerRadius="24">
         
-    </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Upper panel-->
+            <Border Background="#FF111119" Grid.ColumnSpan="3"
+                    CornerRadius="24 24 0 0">
+
+                <Grid>
+
+                    <TextBlock HorizontalAlignment="Left"
+                               Text="Calculator"
+                               Margin="40,2.5,0,0"
+                               FontSize="22"
+                               Foreground="White"
+                               FontFamily="{StaticResource WorkSans}">
+                        
+                    </TextBlock>
+                    
+                    <WrapPanel HorizontalAlignment="Right">
+                        <!--Minimize-->
+                        <Button Style="{StaticResource UpperPanelButton}"
+                            Content="_">
+                        </Button>
+
+                        <!--Cross-->
+                        <Button Style="{StaticResource UpperPanelButton}"
+                            Background="#FF421A1A"
+                            Content="X">
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="0 24 0 0"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#FF5F2222"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                    </WrapPanel>
+                </Grid>
+                
+            </Border>
+
+            <!--Functions-->
+            <Border Grid.Column="0"
+                    Grid.Row="1"
+                    Background="#2E2F38"
+                    CornerRadius="18"
+                    Height="500"
+                    Width="275"
+                    VerticalAlignment="Top"
+                    Margin="0,10,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Button Height="35"
+                            Width="45"
+                            Content="Add"
+                            HorizontalAlignment="Right"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Foreground="#4B5EFC"
+                            FontFamily="{StaticResource WorkSansLight}"
+                            FontSize="14"
+                            Style="{StaticResource TransparentyButton}"
+                            VerticalAlignment="Top">
+                            
+                    </Button>
+
+                    <TextBlock Text="Functions"
+                               Foreground="White"
+                               FontFamily="{StaticResource WorkSans}"
+                               FontSize="20"
+                               VerticalAlignment="Top"
+                               Margin="15,3,0,0"/>
+
+                    <TextBlock Text="Name"
+                               Foreground="Gray"
+                               FontFamily="{StaticResource WorkSansLight}"
+                               FontSize="18"
+                               VerticalAlignment="Bottom"
+                               Margin="10,0,0,7"/>
+
+                    <TextBlock Text="Value"
+                               Foreground="Gray"
+                               FontFamily="{StaticResource WorkSansLight}"
+                               FontSize="18"
+                               VerticalAlignment="Bottom"
+                               Margin="80,0,0,7"/>
+
+                    <StackPanel Grid.Row="1">
+                    <!--<Button Content="Add" FontSize="24" Margin="5" Foreground="#4B5EFC"/>
+                        <Button Content="Del" FontSize="24" Margin="5" Foreground="#4B5EFC"/>
+                        <Button Content="Edit" FontSize="24" Margin="5" Foreground="#4B5EFC"/>-->
+                    </StackPanel>
+                </Grid>
+                
+            </Border>
+            
+            <!--Calculator-->
+            <Grid Grid.Column="1" 
+                  Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+
+                <TextBox Name="CalculatorDisplay" 
+                         Grid.Row="0"
+                         Height="175"
+                         Width="275"
+                         FontSize="20" 
+                         FontFamily="{StaticResource WorkSans}"
+                         VerticalAlignment="Center" 
+                         Background="Transparent"
+                         Foreground="#FFFFFF"
+                         TextAlignment="Right"
+                         TextWrapping="Wrap"
+                         Text="12312131,23312312123213231123123wwrwe1"
+                         BorderThickness="0"/>
+
+                <UniformGrid Grid.Row="1"
+                     Rows="6" 
+                     Columns="4"
+                     Height="300"
+                     Width="250">
+
+                    <Button Content="C" Style="{StaticResource LightGrayButton}"/>
+                    <Button Content="(" Style="{StaticResource GrayButton}"/>
+                    <Button Content=")" Style="{StaticResource GrayButton}"/>
+                    <Button Content="÷" Style="{StaticResource PurpleButton}"/>
+                    <Button Content="√" Style="{StaticResource GrayButton}"/>
+                    <Button Content="^" Style="{StaticResource GrayButton}"/>
+                    <Button Content="Del" Style="{StaticResource GrayButton}"/>
+                    <Button Content="x" Style="{StaticResource PurpleButton}"/>
+                    <Button Content="7" Style="{StaticResource GrayButton}"/>
+                    <Button Content="8" Style="{StaticResource GrayButton}"/>
+                    <Button Content="9" Style="{StaticResource GrayButton}"/>
+                    <Button Content="-" Style="{StaticResource PurpleButton}"/>
+                    <Button Content="5" Style="{StaticResource GrayButton}"/>
+                    <Button Content="6" Style="{StaticResource GrayButton}"/>
+                    <Button Content="7" Style="{StaticResource GrayButton}"/>
+                    <Button Content="+" Style="{StaticResource PurpleButton}"/>
+                    <Button Content="1" Style="{StaticResource GrayButton}"/>
+                    <Button Content="2" Style="{StaticResource GrayButton}"/>
+                    <Button Content="3" Style="{StaticResource GrayButton}"/>
+                    <Button Content="=" Style="{StaticResource PurpleButton}"/>
+                    <Button Content="." Style="{StaticResource GrayButton}"/>
+                    <Button Content="0" Style="{StaticResource GrayButton}"/>
+                </UniformGrid>
+
+                
+            </Grid>
+
+            <!--Variables-->
+            <Border Grid.Column="2"
+                    Grid.Row="1"
+                    Background="#2E2F38"
+                    CornerRadius="18"
+                    Height="500"
+                    Width="275"
+                    VerticalAlignment="Top"
+                    Margin="0,10,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Button Height="35"
+                            Width="45"
+                            Content="Add"
+                            HorizontalAlignment="Right"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            Foreground="#4B5EFC"
+                            FontFamily="{StaticResource WorkSansLight}"
+                            FontSize="14"
+                            Style="{StaticResource TransparentyButton}"
+                            VerticalAlignment="Top">    
+
+                    </Button>
+
+                    <TextBlock Text="Variables"
+                               Foreground="White"
+                               FontFamily="{StaticResource WorkSans}"
+                               FontSize="20"
+                               VerticalAlignment="Top"
+                               Margin="15,3,0,0"/>
+
+                    <TextBlock Text="Name"
+                               Foreground="Gray"
+                               FontFamily="{StaticResource WorkSansLight}"
+                               FontSize="18"
+                               VerticalAlignment="Bottom"
+                               Margin="10,0,0,7"/>
+
+                    <TextBlock Text="Value"
+                               Foreground="Gray"
+                               FontFamily="{StaticResource WorkSansLight}"
+                               FontSize="18"
+                               VerticalAlignment="Bottom"
+                               Margin="80,0,0,7"/>
+
+
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="85"/>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock x:Name="varName"
+                                           Text="myVar"
+                                           TextAlignment="Center"
+                                           Width="70"
+                                           Style="{StaticResource SmallTextBlock}"/>
+
+                                <TextBlock x:Name="varValue"
+                                           Text="2 + 5 + 3 * 333 / 5 + (1 + 7)"
+                                           Grid.Column="1"
+                                           Style="{StaticResource SmallTextBlock}"/>
+
+                                <Button Grid.Column="2"
+                                        Style="{StaticResource DeleteButton}"
+                                        Content="Del"
+                                        Foreground="#4B5EFC"/>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+    
+    
 </Window>

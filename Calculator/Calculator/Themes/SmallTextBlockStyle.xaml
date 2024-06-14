@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="SmallTextBlock"
+           TargetType="{x:Type TextBlock}">
+        <Style.Setters>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Work Sans"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style.Setters>
+    </Style>
+</ResourceDictionary>
