@@ -3,52 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace Calculator.MVVM.Views
+namespace Calculator.MVVM.Models
 {
-    /// <summary>
-    /// Логика взаимодействия для AddVariables.xaml
-    /// </summary>
-    public partial class AddVariables : Window
+    internal class AddVariables
     {
-        public AddVariables()
-        {
-            InitializeComponent();
-        }
         private Dictionary<string, double> variables = new Dictionary<string, double>();
 
-        private void CalculateButton_Click(object sender, RoutedEventArgs e)
+        public Dictionary<string, double> Variables => new Dictionary<string, double>(variables);
+
+        public double Calculate(string input)
         {
-            string input = InputTextBox.Text;
             string[] lines = input.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            try
+            double result = 0;
+            foreach (string line in lines)
             {
-                foreach (string line in lines)
+                if (line.Contains("="))
                 {
-                    if (line.Contains("="))
-                    {
-                        ParseVariable(line);
-                    }
-                    else
-                    {
-                        double result = EvaluateExpression(line);
-                        ResultTextBlock.Text = result.ToString();
-                    }
+                    ParseVariable(line);
                 }
-                UpdateVariablesListBox();
+                else
+                {
+                    result = EvaluateExpression(line);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
-            }
+            return result;
         }
 
         private void ParseVariable(string line)
@@ -86,14 +65,6 @@ namespace Calculator.MVVM.Views
         {
             var dataTable = new System.Data.DataTable();
             return Convert.ToDouble(dataTable.Compute(expression, string.Empty));
-        }
-        private void UpdateVariablesListBox()
-        {
-            VariablesListBox.Items.Clear();
-            foreach (var variable in variables)
-            {
-                VariablesListBox.Items.Add($"{variable.Key} = {variable.Value}");
-            }
         }
     }
 }
