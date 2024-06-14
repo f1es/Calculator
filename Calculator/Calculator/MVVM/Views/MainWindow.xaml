@@ -173,26 +173,44 @@
                             Command="{Binding PrintOpenBracketCommand}"/>
                     <Button Content=")" Style="{StaticResource GrayButton}"
                             Command="{Binding PrintCloseBracketCommand}"/>
-                    <Button Content="÷" Style="{StaticResource PurpleButton}"/>
-                    <Button Content="√" Style="{StaticResource GrayButton}"/>
-                    <Button Content="^" Style="{StaticResource GrayButton}"/>
-                    <Button Content="Del" Style="{StaticResource GrayButton}"/>
-                    <Button Content="x" Style="{StaticResource PurpleButton}"/>
-                    <Button Content="7" Style="{StaticResource GrayButton}"/>
-                    <Button Content="8" Style="{StaticResource GrayButton}"/>
-                    <Button Content="9" Style="{StaticResource GrayButton}"/>
-                    <Button Content="-" Style="{StaticResource PurpleButton}"/>
-                    <Button Content="5" Style="{StaticResource GrayButton}"/>
-                    <Button Content="6" Style="{StaticResource GrayButton}"/>
-                    <Button Content="7" Style="{StaticResource GrayButton}"/>
-                    <Button Content="+" Style="{StaticResource PurpleButton}"/>
-                    <Button Content="1" Style="{StaticResource GrayButton}"/>
-                    <Button Content="2" Style="{StaticResource GrayButton}"/>
-                    <Button Content="3" Style="{StaticResource GrayButton}"/>
+                    <Button Content="÷" Style="{StaticResource PurpleButton}"
+                            Command="{Binding PrintDivideCommand}"/>
+                    <Button Content="√" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintSquareRootCommand}"/>
+                    <Button Content="^" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintPowCommand}"/>
+                    <Button Content="Del" Style="{StaticResource GrayButton}"
+                            Command="{Binding DeleteLastSymbolCommand}"/>
+                    <Button Content="x" Style="{StaticResource PurpleButton}"
+                            Command="{Binding PrintMultipleCommand}"/>
+                    <Button Content="7" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintSevenCommand}"/>
+                    <Button Content="8" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintEightCommand}"/>
+                    <Button Content="9" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintNineCommand}"/>
+                    <Button Content="-" Style="{StaticResource PurpleButton}"
+                            Command="{Binding PrintMinusCommand}"/>
+                    <Button Content="4" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintFourCommand}"/>
+                    <Button Content="5" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintFiveCommand}"/>
+                    <Button Content="6" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintSixCommand}"/>
+                    <Button Content="+" Style="{StaticResource PurpleButton}"
+                            Command="{Binding PrintPlusCommand}"/>
+                    <Button Content="1" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintOneCommand}"/>
+                    <Button Content="2" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintTwoCommand}"/>
+                    <Button Content="3" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintThreeCommand}"/>
                     <Button Content="=" Style="{StaticResource PurpleButton}"
                             Command="{Binding CalculateCommand}"/>
-                    <Button Content="." Style="{StaticResource GrayButton}"/>
-                    <Button Content="0" Style="{StaticResource GrayButton}"/>
+                    <Button Content="," Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintDotCommand}"/>
+                    <Button Content="0" Style="{StaticResource GrayButton}"
+                            Command="{Binding PrintZeroCommand}"/>
                 </UniformGrid>
 
                 
