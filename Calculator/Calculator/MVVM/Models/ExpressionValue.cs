@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Calculator.MVVM.Models
+﻿namespace Calculator.MVVM.Models
 {
-	public enum ExpressionValueType
+    public enum ExpressionValueType
 	{
 		Variable,
 		Operator,
