@@ -10,10 +10,8 @@ namespace Calculator.MVVM.Models
     internal class AddFunctions
     {
         private Dictionary<string, Func<double[], double>> functions = new Dictionary<string, Func<double[], double>>();
-        private Dictionary<string, string> functionDefinitions = new Dictionary<string, string>();
 
         public Dictionary<string, Func<double[], double>> Functions => new Dictionary<string, Func<double[], double>>(functions);
-        public Dictionary<string, string> FunctionDefinitions => new Dictionary<string, string>(functionDefinitions);
 
         public string ParseFunction(string line)
         {
@@ -49,16 +47,7 @@ namespace Calculator.MVVM.Models
                 return EvaluateExpression(body, localVariables);
             };
 
-            if (functions.ContainsKey(functionName))
-            {
-                functions[functionName] = function;
-                functionDefinitions[functionName] = line;
-            }
-            else
-            {
-                functions.Add(functionName, function);
-                functionDefinitions.Add(functionName, line);
-            }
+            functions[functionName] = function;
 
             return line;
         }
@@ -84,7 +73,6 @@ namespace Calculator.MVVM.Models
 
             return Evaluate(expression);
         }
-
         private double Evaluate(string expression)
         {
             var dataTable = new DataTable();
