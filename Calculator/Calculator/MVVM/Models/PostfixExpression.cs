@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Calculator.MVVM.Models
 {
@@ -54,68 +55,82 @@ namespace Calculator.MVVM.Models
 				throw new ArgumentNullException(nameof(expression));
 
 			Queue<ExpressionValue> separatedExpression = new Queue<ExpressionValue>();
+			StringBuilder value = new StringBuilder();
 
-			StringBuilder number = new StringBuilder();
-			StringBuilder variable = new StringBuilder();
+			bool isFunction = false;
 			foreach (var symbol in expression)
 			{
-				if (symbol == ' ')
+				char space = ' ';
+				if (symbol == space)
 					continue;
 
-				if (Char.IsDigit(symbol))
+				char openBracket = '(';
+				if (symbol == openBracket && value.Length > 0)
 				{
-					number.Append(symbol);
-					continue;
-				}
-
-				if ((symbol == '.' || symbol == ',') && number.Length > 0)
-				{
-					number.Append(',');
+					value.Append(symbol);
+					isFunction = true;
 					continue;
 				}
 
-				if (Char.IsLetter(symbol))
+				char closeBracket = ')';
+				if (symbol == closeBracket && isFunction)
 				{
-					variable.Append(symbol);
+					value.Append(symbol);
+					isFunction = false;
+					continue;
+				}
+
+				if (symbol == openBracket || symbol == closeBracket)
+				{
+					if (value.Length > 0)
+					{
+						separatedExpression.Enqueue(IdentifyValue(value.ToString()));
+						value.Clear();
+					}
+					separatedExpression.Enqueue(new ExpressionValue(symbol.ToString(), ExpressionValueType.Bracket));
 					continue;
 				}
 
 				if (_operators.Contains(symbol.ToString()))
 				{
-					if (number.Length > 0)
+					if (value.Length > 0)
 					{
-						separatedExpression.Enqueue(new ExpressionValue(number.ToString(), ExpressionValueType.Number));
-						number.Clear();
+						separatedExpression.Enqueue(IdentifyValue(value.ToString()));
+						value.Clear();
 					}
-
-					if (variable.Length > 0)
-					{
-						separatedExpression.Enqueue(new ExpressionValue(variable.ToString(), ExpressionValueType.Variable));
-						variable.Clear();
-					}
-
-					if (symbol == '(' || symbol == ')')
-					{
-						separatedExpression.Enqueue(new ExpressionValue(symbol.ToString(), ExpressionValueType.Bracket));
-						continue;
-					}
-
 					separatedExpression.Enqueue(new ExpressionValue(symbol.ToString(), ExpressionValueType.Operator));
-					continue;
 				}
-
-				throw new Exception("Incorrect variable or operator");
+				else
+				{
+					value.Append(symbol);
+				}
 			}
 
-			if (number.Length > 0)
-				separatedExpression.Enqueue(new ExpressionValue(number.ToString(), ExpressionValueType.Number));
-
-			if (variable.Length > 0)
-				separatedExpression.Enqueue(new ExpressionValue(variable.ToString(), ExpressionValueType.Variable));
+			if (value.Length > 0)
+				separatedExpression.Enqueue(IdentifyValue(value.ToString()));
 
 			return separatedExpression;
 		}
-        private void Validate(Queue<ExpressionValue> separatedExpression)
+
+		private ExpressionValue IdentifyValue(string value)
+		{
+
+			if (Regex.IsMatch(value.ToString(), @"^[a-zA-Z]+[(][a-zA-Z0-9,]{0,}[][)]"))
+			{
+				return new ExpressionValue(value.ToString(), ExpressionValueType.Function);
+			}
+			else if (Regex.IsMatch(value.ToString(), @"^[a-zA-Z]+"))
+			{
+				return new ExpressionValue(value.ToString(), ExpressionValueType.Variable);
+			}
+			else if (double.TryParse(value.ToString(), out _))
+			{
+				return new ExpressionValue(value.ToString(), ExpressionValueType.Number);
+			}
+			else
+				throw new Exception("Incorrect input");
+		}
+		private void Validate(Queue<ExpressionValue> separatedExpression)
         {
             int bracketCounter = 0;
             ExpressionValue previousExpressionValue = new ExpressionValue("0", ExpressionValueType.Number);
