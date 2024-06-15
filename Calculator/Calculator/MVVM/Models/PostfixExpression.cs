@@ -13,8 +13,6 @@ namespace Calculator.MVVM.Models
 			"-",
 			"*",
 			"/",
-			"(",
-			")",
 			"^",
 		};
 		private Dictionary<string, int> _operatorsPriority = new Dictionary<string, int>()
