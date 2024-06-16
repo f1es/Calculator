@@ -7,5 +7,6 @@
         <Setter Property="TextBlock.Margin" Value="17.5,0,0,0"/>
         <Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+        <Setter Property="TextBlock.FontSize" Value="14"/>
     </Style>
 </ResourceDictionary>
