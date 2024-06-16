@@ -5,15 +5,10 @@
         
         <Style.Setters>
             <Setter Property="Background" Value="#2E2F38"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="16"
-                                BorderThickness="0"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Text" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text, Mode=TwoWay}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style.Setters>
     </Style>
 </ResourceDictionary>

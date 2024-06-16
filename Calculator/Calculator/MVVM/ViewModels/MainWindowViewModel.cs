@@ -1,4 +1,5 @@
 ﻿using Calculator.MVVM.Models;
+using Calculator.MVVM.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -239,11 +240,30 @@ namespace Calculator.MVVM.ViewModels
                 }
             });
         }
-        public ICommand DeleteVariableCommand { get; set; }
-        public MainWindowViewModel()
+        public ICommand DeleteVariableCommand 
+        { 
+            get => new RelayCommand(RemoveVariable); 
+        }
+        public ICommand AddVariableCommand
         {
-            DeleteVariableCommand = new RelayCommand(RemoveVariable);
-		}
+            get => new RelayCommand(c =>
+            {
+				if (!WindowsHelper.IsWindowExists(typeof(AddVariableWindow)))
+				{
+					new AddVariableWindow().Show();
+				}
+			});
+        }
+        public ICommand AddFunctionCommand
+        {
+            get => new RelayCommand(c =>
+            {
+                if (!WindowsHelper.IsWindowExists(typeof(AddFunctionWindow)))
+                {
+                    new AddFunctionWindow().Show();
+                }
+            });
+        }
 		private void RemoveVariable(object key)
 		{
 			if (key is string keyValue)
@@ -255,5 +275,6 @@ namespace Calculator.MVVM.ViewModels
 				}
 			}
 		}
+        
 	}
 }

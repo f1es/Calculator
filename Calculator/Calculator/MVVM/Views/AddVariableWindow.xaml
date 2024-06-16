@@ -4,13 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator.MVVM.Views"
+        xmlns:viewModels="clr-namespace:Calculator.MVVM.ViewModels"
         mc:Ignorable="d"
         Title="AddVariableWindow" 
         Height="225" Width="300"
         AllowsTransparency="True"
         Background="Transparent"
-        WindowStyle="None">
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen">
 
+    <Window.DataContext>
+        <viewModels:AddVariableWindowViewModel/>
+    </Window.DataContext>
+    
     <Border Background="#FF1D1D1F"
             CornerRadius="24">
         <Grid>
@@ -26,12 +32,22 @@
                        Foreground="Gray"
                        Text="Example: x = 2.5"
                        Margin="10,5,0,0"/>
-            <TextBox Grid.Row="1"
-                     Width="280"
-                     Height="130"
-                     Style="{StaticResource TextBox}"
-                     HorizontalAlignment="Center"
-                     Margin="0,0,0,0"/>
+            <Border Grid.Row="1"
+                    Width="280"
+                    Height="130"
+                    CornerRadius="16"
+                    Background="#2E2F38">
+                <TextBox Grid.Row="1"
+                         Width="260"
+                         Height="110"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         FontFamily="{StaticResource WorkSans}"
+                         Text="{Binding VariableExpression, Mode=TwoWay}"
+                         Style="{StaticResource TextBox}"/>
+            </Border>
+            
+           
 
             <Button Grid.Row="3"
                     Height="35"
@@ -39,7 +55,8 @@
                     Style="{StaticResource GrayButton}"
                     Content="Cancel"
                     HorizontalAlignment="Left"
-                    Margin="25,0,0,0"/>
+                    Margin="25,0,0,0"
+                    Command="{Binding CloseCommand}"/>
 
             <Button Grid.Row="3"
                     Height="35"
@@ -47,7 +64,8 @@
                     Style="{StaticResource PurpleButton}"
                     Content="Accept"
                     HorizontalAlignment="Right"
-                    Margin="0,0,25,0"/>
+                    Margin="0,0,25,0"
+                    Command="{Binding AcceptCommand}"/>
         </Grid>
     </Border>
     

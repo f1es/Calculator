@@ -4,7 +4,7 @@
            x:Key="TransparentyButton">
         <Setter Property="Background">
             <Setter.Value>
-                <SolidColorBrush Color="Transparent" Opacity="0"/>
+                <SolidColorBrush Color="Transparent" Opacity="1"/>
             </Setter.Value>
         </Setter>
         <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -25,14 +25,14 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background">
                     <Setter.Value>
-                        <SolidColorBrush Color="Transparent" Opacity="0.15"/>
+                        <SolidColorBrush Color="Transparent" Opacity="1"/>
                     </Setter.Value>
                 </Setter>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background">
                     <Setter.Value>
-                        <SolidColorBrush Color="Transparent" Opacity="0.3"/>
+                        <SolidColorBrush Color="Transparent" Opacity="1"/>
                     </Setter.Value>
                 </Setter>
             </Trigger>

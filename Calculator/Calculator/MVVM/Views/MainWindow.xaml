@@ -104,7 +104,8 @@
                             FontFamily="{StaticResource WorkSansLight}"
                             FontSize="14"
                             Style="{StaticResource TransparentyButton}"
-                            VerticalAlignment="Top">
+                            VerticalAlignment="Top"
+                            Command="{Binding AddFunctionCommand}">
                             
                     </Button>
 
@@ -113,6 +114,8 @@
                                FontFamily="{StaticResource WorkSans}"
                                FontSize="20"
                                VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Width="100"
                                Margin="15,3,0,0"/>
 
                     <TextBlock Text="Name"
@@ -240,7 +243,9 @@
                             FontFamily="{StaticResource WorkSansLight}"
                             FontSize="14"
                             Style="{StaticResource TransparentyButton}"
-                            VerticalAlignment="Top">    
+                            Background="Transparent"
+                            VerticalAlignment="Top"
+                            Command="{Binding AddVariableCommand}">    
 
                     </Button>
 
@@ -248,6 +253,8 @@
                                Foreground="White"
                                FontFamily="{StaticResource WorkSans}"
                                FontSize="20"
+                               Width="100"
+                               HorizontalAlignment="Left"
                                VerticalAlignment="Top"
                                Margin="15,3,0,0"/>
 
