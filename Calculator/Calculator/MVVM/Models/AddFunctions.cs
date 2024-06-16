@@ -7,12 +7,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Calculator.MVVM.Models
+namespace Consolee
 {
-    internal class AddFunctions
+    public class AddFunctions
     {
         private Dictionary<string, (string[] Parameters, string Body, Func<double[], double> Function)> functions = new Dictionary<string, (string[], string, Func<double[], double>)>();
-
         public Dictionary<string, Func<double[], double>> Functions
         {
             get
@@ -25,7 +24,6 @@ namespace Calculator.MVVM.Models
                 return funcs;
             }
         }
-
         public string ParseFunction(string line)
         {
             int equalIndex = line.IndexOf('=');
@@ -100,7 +98,11 @@ namespace Calculator.MVVM.Models
                 throw new ArgumentException("Incorrect number of arguments provided for the function.");
             }
 
-            double[] args = Array.ConvertAll(argsStr, s => double.Parse(s, CultureInfo.InvariantCulture));
+            double[] args;
+            if (argsStr[0] != "") // ПРОВЕРКА НА ОТСТУТСТВИЕ АРГУМЕНТОВ
+                args = Array.ConvertAll(argsStr, s => double.Parse(s, CultureInfo.InvariantCulture));
+            else
+                args = Array.Empty<double>();
 
             // Substitute the parameters in the body with the provided args
             var substitutedExpression = SubstituteArgsInExpression(body, parameters, args);
@@ -109,10 +111,12 @@ namespace Calculator.MVVM.Models
 
         private string SubstituteArgsInExpression(string expression, string[] parameters, double[] args)
         {
+            if (parameters[0] == "") // ПРОВЕРКА НА ОТСТУТСТВИЕ АРГУМЕНТОВ
+                return expression;
+
             for (int i = 0; i < parameters.Length; i++)
             {
-                string argStr = args[i] < 0 ? $"({args[i].ToString(CultureInfo.InvariantCulture)})" : args[i].ToString(CultureInfo.InvariantCulture);
-                expression = expression.Replace(parameters[i].Trim(), argStr);
+                expression = expression.Replace(parameters[i].Trim(), '(' + args[i].ToString() + ')'); // КОСТЫЛЬ 
             }
 
             return expression;
@@ -122,8 +126,7 @@ namespace Calculator.MVVM.Models
         {
             foreach (var variable in localVariables)
             {
-                string valueStr = variable.Value < 0 ? $"({variable.Value.ToString(CultureInfo.InvariantCulture)})" : variable.Value.ToString(CultureInfo.InvariantCulture);
-                expression = expression.Replace(variable.Key, valueStr);
+                expression = expression.Replace(variable.Key, variable.Value.ToString());
             }
 
             return Evaluate(expression);
@@ -132,7 +135,7 @@ namespace Calculator.MVVM.Models
         private double Evaluate(string expression)
         {
             var dataTable = new DataTable();
-            return Convert.ToDouble(dataTable.Compute(expression, string.Empty), CultureInfo.InvariantCulture);
+            return Convert.ToDouble(dataTable.Compute(expression, string.Empty));
         }
     }
 }
