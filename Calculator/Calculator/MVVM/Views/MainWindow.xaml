@@ -236,7 +236,6 @@
                             Content="Add"
                             HorizontalAlignment="Right"
                             BorderThickness="0"
-                            Background="Transparent"
                             Foreground="#4B5EFC"
                             FontFamily="{StaticResource WorkSansLight}"
                             FontSize="14"
@@ -264,37 +263,74 @@
                                FontFamily="{StaticResource WorkSansLight}"
                                FontSize="18"
                                VerticalAlignment="Bottom"
-                               Margin="80,0,0,7"/>
+                               Margin="100,0,0,7"/>
 
 
-                    <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1">
-                        <StackPanel>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="140"/>
-                                    <ColumnDefinition Width="50"/>
-                                </Grid.ColumnDefinitions>
+                    <DataGrid Grid.Row="1"
+                              Background="Transparent"
+                              HeadersVisibility="None"
+                              BorderThickness="0"
+                              ItemsSource="{Binding Variables, Mode=TwoWay}"
+                              RowBackground="Transparent" 
+                              GridLinesVisibility="None"
+                              Foreground="White"
+                              FontFamily="{StaticResource WorkSans}"
+                              AutoGenerateColumns="False"
+                              MinRowHeight="25"
+                              SelectionMode="Single"
+                              SelectionUnit="Cell"
+                              IsReadOnly="True">
+                        
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell">
 
-                                <TextBlock x:Name="varName"
-                                           Text="myVar"
-                                           TextAlignment="Center"
-                                           Width="70"
-                                           Style="{StaticResource SmallTextBlock}"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="{x:Type ScrollBar}"
+                                   BasedOn="{StaticResource ScrollBar}"/>
+                        </DataGrid.Resources>
 
-                                <TextBlock x:Name="varValue"
-                                           Text="2 + 5 + 3 * 333 / 5 + (1 + 7)"
-                                           Grid.Column="1"
-                                           Style="{StaticResource SmallTextBlock}"/>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Margin" Value="0,0,0,5"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" 
+                                                Binding="{Binding Key}" 
+                                                DisplayIndex="0"
+                                                ElementStyle="{StaticResource KeyTextboxStyle}"
+                                                EditingElementStyle="{StaticResource KeyTextboxStyle}">
+                            </DataGridTextColumn>
 
-                                <Button Grid.Column="2"
-                                        Style="{StaticResource DeleteButton}"
-                                        Content="Del"
-                                        Foreground="#4B5EFC"/>
-                            </Grid>
-                        </StackPanel>
-                    </ScrollViewer>
-                    
+                            <DataGridTextColumn Header="Value" 
+                                                Binding="{Binding Value}"
+                                                DisplayIndex="1" 
+                                                ElementStyle="{StaticResource ValueTextboxStyle}"
+                                                EditingElementStyle="{StaticResource ValueTextboxStyle}">
+                            </DataGridTextColumn>
+
+                            <DataGridTemplateColumn DisplayIndex="2">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Del"
+                                                Style="{StaticResource TransparentyButton}"
+                                                VerticalAlignment="Top"
+                                                Foreground="#4B5EFC"
+                                                Command="{Binding DataContext.DeleteVariableCommand, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                CommandParameter="{Binding Key}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </Border>
         </Grid>

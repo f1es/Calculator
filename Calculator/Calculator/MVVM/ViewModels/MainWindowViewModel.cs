@@ -1,11 +1,17 @@
 ﻿using Calculator.MVVM.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Xml;
 
 namespace Calculator.MVVM.ViewModels
 {
@@ -13,7 +19,40 @@ namespace Calculator.MVVM.ViewModels
     {
         private string _expression = "";
         private PostfixCalculator _postfixCalculator = new PostfixCalculator();
-
+        private Dictionary<string, double> _variables = new Dictionary<string, double>() 
+        { 
+            { "xgisgsiorghsorig", 134123213343123.2233256 }, 
+            {"x", 1.5 },
+            {"y", 1.5 },
+            {"yy", 1.5 },
+            {"xy", 1.5 },
+            {"xq", 1.5 },
+            {"xw", 1.5 },
+            {"xe", 1.5 },
+            {"xr", 1.5 },
+            {"xt", 1.5 },
+            {"xyfff", 1.5 },
+            {"xg", 1.5 },
+            {"xb", 1.5 },
+            {"xd", 1.5 },
+            {"xs", 1.5 },
+            {"xa", 1.5 },
+            {"xk", 1.5 },
+            {"xl", 1.5 },
+            {"x5", 1.5 }
+        };
+        public Dictionary<string, double> Variables 
+        {
+            get 
+            {
+                return _variables;
+            } 
+            set
+            {
+                _variables = value;
+                OnPropertyChanged();
+            }
+        }
         public string Expression
         {
             get => _expression.ToString(); 
@@ -184,7 +223,6 @@ namespace Calculator.MVVM.ViewModels
                 Expression += "-";
             });
         }
-
         public ICommand CalculateCommand
         {
             get => new RelayCommand(c =>
@@ -201,5 +239,21 @@ namespace Calculator.MVVM.ViewModels
                 }
             });
         }
-    }
+        public ICommand DeleteVariableCommand { get; set; }
+        public MainWindowViewModel()
+        {
+            DeleteVariableCommand = new RelayCommand(RemoveVariable);
+		}
+		private void RemoveVariable(object key)
+		{
+			if (key is string keyValue)
+			{
+				if (_variables.ContainsKey(keyValue))
+				{
+					Variables.Remove(keyValue);
+					CollectionViewSource.GetDefaultView(Variables).Refresh();
+				}
+			}
+		}
+	}
 }
