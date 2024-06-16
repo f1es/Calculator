@@ -1,17 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Calculator.MVVM.Models
 {
     internal class AddFunctions
     {
-        private Dictionary<string, Func<double[], double>> functions = new Dictionary<string, Func<double[], double>>();
+        private Dictionary<string, (string[] Parameters, string Body, Func<double[], double> Function)> functions = new Dictionary<string, (string[], string, Func<double[], double>)>();
 
-        public Dictionary<string, Func<double[], double>> Functions => new Dictionary<string, Func<double[], double>>(functions);
+        public Dictionary<string, Func<double[], double>> Functions
+        {
+            get
+            {
+                var funcs = new Dictionary<string, Func<double[], double>>();
+                foreach (var kvp in functions)
+                {
+                    funcs[kvp.Key] = kvp.Value.Function;
+                }
+                return funcs;
+            }
+        }
 
         public string ParseFunction(string line)
         {
@@ -47,7 +60,7 @@ namespace Calculator.MVVM.Models
                 return EvaluateExpression(body, localVariables);
             };
 
-            functions[functionName] = function;
+            functions[functionName] = (parameters, body, function);
 
             return line;
         }
@@ -56,7 +69,7 @@ namespace Calculator.MVVM.Models
         {
             if (functions.ContainsKey(functionName))
             {
-                return functions[functionName](args);
+                return functions[functionName].Function(args);
             }
             else
             {
@@ -64,19 +77,62 @@ namespace Calculator.MVVM.Models
             }
         }
 
+        public string GetFunctionExpressionWithArgs(string functionCall)
+        {
+            var match = Regex.Match(functionCall, @"(\w+)\(([^)]*)\)");
+            if (!match.Success)
+            {
+                throw new ArgumentException("Invalid function call format.");
+            }
+
+            string functionName = match.Groups[1].Value;
+            string[] argsStr = match.Groups[2].Value.Split(',');
+
+            if (!functions.ContainsKey(functionName))
+            {
+                throw new Exception($"Function '{functionName}' is not defined.");
+            }
+
+            var (parameters, body, function) = functions[functionName];
+
+            if (argsStr.Length != parameters.Length)
+            {
+                throw new ArgumentException("Incorrect number of arguments provided for the function.");
+            }
+
+            double[] args = Array.ConvertAll(argsStr, s => double.Parse(s, CultureInfo.InvariantCulture));
+
+            // Substitute the parameters in the body with the provided args
+            var substitutedExpression = SubstituteArgsInExpression(body, parameters, args);
+            return substitutedExpression;
+        }
+
+        private string SubstituteArgsInExpression(string expression, string[] parameters, double[] args)
+        {
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                string argStr = args[i] < 0 ? $"({args[i].ToString(CultureInfo.InvariantCulture)})" : args[i].ToString(CultureInfo.InvariantCulture);
+                expression = expression.Replace(parameters[i].Trim(), argStr);
+            }
+
+            return expression;
+        }
+
         private double EvaluateExpression(string expression, Dictionary<string, double> localVariables)
         {
             foreach (var variable in localVariables)
             {
-                expression = expression.Replace(variable.Key, variable.Value.ToString());
+                string valueStr = variable.Value < 0 ? $"({variable.Value.ToString(CultureInfo.InvariantCulture)})" : variable.Value.ToString(CultureInfo.InvariantCulture);
+                expression = expression.Replace(variable.Key, valueStr);
             }
 
             return Evaluate(expression);
         }
+
         private double Evaluate(string expression)
         {
             var dataTable = new DataTable();
-            return Convert.ToDouble(dataTable.Compute(expression, string.Empty));
+            return Convert.ToDouble(dataTable.Compute(expression, string.Empty), CultureInfo.InvariantCulture);
         }
     }
 }
