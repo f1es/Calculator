@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Calculator.MVVM.Models
 {
-    public class PostfixExpression
+	public class PostfixExpression
 	{
 		private string _infixExpression;
 		private Queue<ExpressionValue> _expression;
@@ -33,14 +34,14 @@ namespace Calculator.MVVM.Models
 		public Queue<ExpressionValue> Expression
 		{
 			get => _expression;
-			private set => value = _expression;
+			set => _expression = value;
 		}
 		public PostfixExpression(string expression)
 		{
 			_infixExpression = expression;
 			var separatedExpression = SeparateExpression(expression);
-            Validate(separatedExpression);
-            ToPostfix(separatedExpression);
+			Validate(separatedExpression);
+			ToPostfix(separatedExpression);
 		}
 		public static PostfixExpression Parse(string expression)
 		{
@@ -52,29 +53,49 @@ namespace Calculator.MVVM.Models
 			if (expression == null)
 				throw new ArgumentNullException(nameof(expression));
 
+			expression = expression.Replace(" ", string.Empty);
+
 			Queue<ExpressionValue> separatedExpression = new Queue<ExpressionValue>();
 			StringBuilder value = new StringBuilder();
 
+			int functionBracketCounter = 0;
 			bool isFunction = false;
 			foreach (var symbol in expression)
 			{
-				char space = ' ';
-				if (symbol == space)
-					continue;
-
+				char closeBracket = ')';
 				char openBracket = '(';
+				if (isFunction)
+				{
+					if (symbol == openBracket)
+					{
+						functionBracketCounter++;
+						value.Append(symbol);
+					}
+					else if (symbol == closeBracket && functionBracketCounter > 0)
+					{
+						functionBracketCounter--;
+						value.Append(symbol);
+					}
+					else if (symbol == closeBracket)
+					{
+						value.Append(symbol);
+						separatedExpression.Enqueue(new ExpressionValue(value.ToString(), ExpressionValueType.Function));
+						value.Clear();
+						isFunction = false;
+					}
+					else
+					{
+						value.Append(symbol);
+					}
+
+					continue;
+				}
+
+
 				if (symbol == openBracket && value.Length > 0)
 				{
 					value.Append(symbol);
 					isFunction = true;
-					continue;
-				}
-
-				char closeBracket = ')';
-				if (symbol == closeBracket && isFunction)
-				{
-					value.Append(symbol);
-					isFunction = false;
 					continue;
 				}
 
@@ -109,11 +130,10 @@ namespace Calculator.MVVM.Models
 
 			return separatedExpression;
 		}
-
 		private ExpressionValue IdentifyValue(string value)
 		{
 
-			if (Regex.IsMatch(value.ToString(), @"^[a-zA-Z]+[(][a-zA-Z0-9,]{0,}[][)]"))
+			if (Regex.IsMatch(value.ToString(), @"^[a-zA-Z]+[(][a-zA-Z0-9,.-]{0,}[][)]"))
 			{
 				return new ExpressionValue(value.ToString(), ExpressionValueType.Function);
 			}
@@ -121,7 +141,7 @@ namespace Calculator.MVVM.Models
 			{
 				return new ExpressionValue(value.ToString(), ExpressionValueType.Variable);
 			}
-			else if (double.TryParse(value.ToString(), out _))
+			else if (double.TryParse(value.ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
 			{
 				return new ExpressionValue(value.ToString(), ExpressionValueType.Number);
 			}
@@ -129,47 +149,59 @@ namespace Calculator.MVVM.Models
 				throw new Exception("Incorrect input");
 		}
 		private void Validate(Queue<ExpressionValue> separatedExpression)
-        {
-            int bracketCounter = 0;
-            ExpressionValue previousExpressionValue = new ExpressionValue("0", ExpressionValueType.Number);
-            foreach (var expression in separatedExpression)
-            {
-                switch (expression.ValueType)
-                {
-                    case ExpressionValueType.Variable:
-                        throw new NotImplementedException();
-                        break;
-                    case ExpressionValueType.Operator:
+		{
+			int bracketCounter = 0;
+			ExpressionValue previousExpressionValue = new ExpressionValue("0", ExpressionValueType.NullValue);
+			foreach (var expression in separatedExpression)
+			{
+				switch (expression.ValueType)
+				{
+					case ExpressionValueType.Variable: // +
 
-                        if (previousExpressionValue.ValueType == ExpressionValueType.Operator)
-                            throw new Exception("Operators shouldn't repeat");
+						foreach (var symbol in expression.Value)
+						{
+							if (!Char.IsLetter(symbol))
+								throw new Exception("Every symbol in variable must be a letter");
+						}
 
-                        break;
-                    case ExpressionValueType.Number:
+						break;
+					case ExpressionValueType.Operator:
 
-                        if (!double.TryParse(expression.Value, out double a))
-                            throw new Exception("Incorrect number");
+						if (previousExpressionValue.ValueType == ExpressionValueType.Operator)
+							throw new Exception("Operators shouldn't repeat");
 
-                        break;
-                    case ExpressionValueType.Bracket:
+						break;
+					case ExpressionValueType.Number:
 
-                        if (expression.Value == "(")
-                            bracketCounter++;
-                        else
-                            bracketCounter--;
+						if (!double.TryParse(expression.Value.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
+							throw new Exception("Incorrect number");
 
-                        break;
-                }
+						if (previousExpressionValue.Value == ")") // +
+							throw new Exception("Missing operator between number and bracket");
 
-                previousExpressionValue = expression;
-            }
+						break;
+					case ExpressionValueType.Bracket:
 
-            if (bracketCounter > 0)
-                throw new Exception("All brackets should be closed");
-            else if (bracketCounter < 0)
-                throw new Exception("Unnecessary bracket");
-        }
-        private void ToPostfix(Queue<ExpressionValue> normalExpression)
+						if (expression.Value == "(" && previousExpressionValue.ValueType == ExpressionValueType.Number) // +
+							throw new Exception("Missing operator between number and bracket");
+
+						if (expression.Value == "(")
+							bracketCounter++;
+						else
+							bracketCounter--;
+					
+						break;
+				}
+
+				previousExpressionValue = expression;
+			}
+
+			if (bracketCounter > 0)
+				throw new Exception("All brackets should be closed");
+			else if (bracketCounter < 0)
+				throw new Exception("Unnecessary bracket");
+		}
+		private void ToPostfix(Queue<ExpressionValue> normalExpression)
 		{
 			Queue<ExpressionValue> postfixExpression = new Queue<ExpressionValue>();
 			Stack<ExpressionValue> operators = new Stack<ExpressionValue>();
@@ -178,8 +210,8 @@ namespace Calculator.MVVM.Models
 			{
 				switch (expressionValue.ValueType)
 				{
-					case ExpressionValueType.Variable:
-						throw new NotImplementedException();
+					case ExpressionValueType.Variable: //+
+						postfixExpression.Enqueue(expressionValue);
 						break;
 					case ExpressionValueType.Operator:
 
@@ -211,6 +243,9 @@ namespace Calculator.MVVM.Models
 								postfixExpression.Enqueue(operators.Pop());
 							operators.Pop();
 						}
+						break;
+					case ExpressionValueType.Function: //+
+						postfixExpression.Enqueue(expressionValue);
 						break;
 					default:
 						throw new Exception("Unknown expression value");

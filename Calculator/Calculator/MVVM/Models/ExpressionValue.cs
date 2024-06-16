@@ -6,7 +6,8 @@
 		Operator,
 		Number,
 		Bracket,
-		Function
+		Function,
+		NullValue
 	}
 	public class ExpressionValue
 	{
