@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator.MVVM.Models
+namespace Consolee
 {
-    internal class AddVariables
+    public class AddVariables
     {
         private Dictionary<string, double> variables = new Dictionary<string, double>();
-
         public Dictionary<string, double> Variables => new Dictionary<string, double>(variables);
 
         public double Calculate(string input)
