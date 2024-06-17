@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="WorkSans">\Fonts\WorkSans-Regular.ttf#Work Sans</FontFamily>
+    <FontFamily x:Key="WorkSansLight">\Fonts\WorkSans-Light.ttf#Work Sans Light</FontFamily>
+</ResourceDictionary>

@@ -9,9 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\WorkSans-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Images\" />
-    <Folder Include="MVVM\Models\" />
-    <Folder Include="MVVM\ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\WorkSans-Regular.ttf" />
   </ItemGroup>
 
 </Project>
