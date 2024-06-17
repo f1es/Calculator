@@ -1,11 +1,13 @@
 ﻿namespace Calculator.MVVM.Models
 {
-    public enum ExpressionValueType
+	public enum ExpressionValueType
 	{
 		Variable,
 		Operator,
 		Number,
-		Bracket
+		Bracket,
+		Function,
+		NullValue
 	}
 	public class ExpressionValue
 	{

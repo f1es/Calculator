@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:Calculator.MVVM.ViewModels"
         mc:Ignorable="d"
         Title="AddFunctionWindow" 
-        Height="225" Width="300"
+        Height="240" Width="300"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None"
@@ -21,7 +21,7 @@
         CornerRadius="24">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
@@ -31,7 +31,8 @@
                        FontSize="16"
                        Foreground="Gray"
                        Text="Example: myFunction(x,y) = x + y - 1.1"
-                       Margin="10,5,0,0"/>
+                       Margin="10,5,0,0"
+                       VerticalAlignment="Center"/>
 
             <Border  Grid.Row="1"
                      Width="280"

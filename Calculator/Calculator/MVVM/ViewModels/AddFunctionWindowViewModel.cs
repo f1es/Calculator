@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Calculator.MVVM.ViewModels
@@ -26,8 +28,20 @@ namespace Calculator.MVVM.ViewModels
 			get => new RelayCommand(c =>
 			{
 				// Add function to dictionary here
-				//var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-				throw new NotImplementedException();
+				try
+				{
+					var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+					mainWindowViewModel.PostfixCalculator.Functions.ParseFunction(FunctionExpression);
+					CollectionViewSource.GetDefaultView(mainWindowViewModel.Functions).Refresh();
+					CollectionViewSource.GetDefaultView(mainWindowViewModel.ViewFunctions).Refresh();
+					mainWindowViewModel.OnPropertyChanged("ViewFunctions");
+					WindowsHelper.CloseWindow(this);
+				}
+				catch (Exception ex)
+				{ 
+				 MessageBox.Show(ex.Message);
+				}
+				
 			});
 		}
 
