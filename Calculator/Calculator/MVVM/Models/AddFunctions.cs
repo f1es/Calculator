@@ -12,18 +12,6 @@ namespace Calculator.MVVM.Models
 	public class AddFunctions
 	{
 		private Dictionary<string, (string[] Parameters, string Body, Func<double[], double> Function, string BodyWithHeader)> functions = new Dictionary<string, (string[], string, Func<double[], double>, string)>();
-		//public Dictionary<string, Func<double[], double>> Functions
-		//{
-		//	get
-		//	{
-		//		var funcs = new Dictionary<string, Func<double[], double>>();
-		//		foreach (var kvp in functions)
-		//		{
-		//			funcs[kvp.Key] = kvp.Value.Function;
-		//		}
-		//		return funcs;
-		//	}
-		//}
 
 		public Dictionary<string, (string[] Parameters, string Body, Func<double[], double> Function, string BodyWithHeader)> Functions
 		{ 
@@ -122,7 +110,6 @@ namespace Calculator.MVVM.Models
 			else
 				args = Array.Empty<double>();
 
-			// Substitute the parameters in the body with the provided args
 			var substitutedExpression = SubstituteArgsInExpression(body, parameters, args);
 			return substitutedExpression;
 		}
