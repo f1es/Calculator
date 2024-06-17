@@ -22,10 +22,7 @@ namespace Calculator.MVVM.ViewModels
         private PostfixCalculator _postfixCalculator = new PostfixCalculator();
         public Dictionary<string, double> Variables 
         {
-            get 
-            {
-                return _postfixCalculator.Variables.Variables;
-            }
+            get => _postfixCalculator.Variables.Variables;
         }
         public Dictionary<string, (string[] Parameters, string Body, Func<double[], double> Function, string BodyWithHeader)> Functions
         {
@@ -109,7 +106,8 @@ namespace Calculator.MVVM.ViewModels
         {
             get => new RelayCommand(_ =>
             {
-                Expression = Expression.Remove(Expression.Length - 1);
+                if (Expression.Length > 0)
+                    Expression = Expression.Remove(Expression.Length - 1);
             });
         }
         public ICommand PrintMultipleCommand
