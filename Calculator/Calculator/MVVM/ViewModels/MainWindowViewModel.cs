@@ -20,48 +20,31 @@ namespace Calculator.MVVM.ViewModels
     {
         private string _expression = "";
         private PostfixCalculator _postfixCalculator = new PostfixCalculator();
-        private Dictionary<string, double> _variables = new Dictionary<string, double>() 
-        { 
-            { "xgisgsiorghsorig", 134123213343123.2233256 }, 
-            {"x", 1.5 },
-            {"y", 1.5 },
-            {"yy", 1.5 },
-            {"xy", 1.5 },
-            {"xq", 1.5 },
-            {"xw", 1.5 },
-            {"xe", 1.5 },
-            {"xr", 1.5 },
-            {"xt", 1.5 },
-            {"xyfff", 1.5 },
-            {"xg", 1.5 },
-            {"xb", 1.5 },
-            {"xd", 1.5 },
-            {"xs", 1.5 },
-            {"xa", 1.5 },
-            {"xk", 1.5 },
-            {"xl", 1.5 },
-            {"x5", 1.5 }
-        };
         public Dictionary<string, double> Variables 
         {
-            get 
-            {
-                return _variables;
-            } 
-            set
-            {
-                _variables = value;
-                OnPropertyChanged();
-            }
+            get => _postfixCalculator.Variables.Variables;
+        }
+        public Dictionary<string, (string[] Parameters, string Body, Func<double[], double> Function, string BodyWithHeader)> Functions
+        {
+            get => _postfixCalculator.Functions.Functions;
+        }
+        public Dictionary<string, string> ViewFunctions
+        {
+            get => _postfixCalculator.Functions.ViewFunctions;
         }
         public string Expression
         {
-            get => _expression.ToString(); 
+            get => _expression.ToString();
             set
             {
                 _expression = value;
                 OnPropertyChanged();
             }
+        }
+        public PostfixCalculator PostfixCalculator
+        {
+            get => _postfixCalculator;
+            private set => _postfixCalculator = value;
         }
         public ICommand CloseCommand
         {
@@ -109,7 +92,7 @@ namespace Calculator.MVVM.ViewModels
         {
             get => new RelayCommand(_ =>
             {
-                Expression += "√";
+                Expression += "sqrt()";
             });
         }
         public ICommand PrintPowCommand
@@ -123,7 +106,8 @@ namespace Calculator.MVVM.ViewModels
         {
             get => new RelayCommand(_ =>
             {
-                Expression = Expression.Remove(Expression.Length - 1);
+                if (Expression.Length > 0)
+                    Expression = Expression.Remove(Expression.Length - 1);
             });
         }
         public ICommand PrintMultipleCommand
@@ -207,7 +191,7 @@ namespace Calculator.MVVM.ViewModels
         {
             get => new RelayCommand(_ =>
             {
-                Expression += ",";
+                Expression += ".";
             });
         }
         public ICommand PrintPlusCommand
@@ -232,7 +216,9 @@ namespace Calculator.MVVM.ViewModels
                 {
                     PostfixExpression postfixExpression = new PostfixExpression(Expression);
                     Expression = "";
-                    Expression = _postfixCalculator.CalculatePostfix(postfixExpression).ToString();
+                    char dot = '.';
+                    char comma = ',';
+                    Expression = _postfixCalculator.CalculatePostfix(postfixExpression).ToString().Replace(comma, dot);
                 }
                 catch (Exception ex) 
                 {
@@ -240,9 +226,13 @@ namespace Calculator.MVVM.ViewModels
                 }
             });
         }
-        public ICommand DeleteVariableCommand 
+        public ICommand RemoveVariableCommand 
         { 
             get => new RelayCommand(RemoveVariable); 
+        }
+        public ICommand RemoveFunctionCommand
+        {
+            get => new RelayCommand(RemoveFunction);
         }
         public ICommand AddVariableCommand
         {
@@ -251,6 +241,7 @@ namespace Calculator.MVVM.ViewModels
 				if (!WindowsHelper.IsWindowExists(typeof(AddVariableWindow)))
 				{
 					new AddVariableWindow().Show();
+					CollectionViewSource.GetDefaultView(Variables).Refresh();
 				}
 			});
         }
@@ -264,17 +255,31 @@ namespace Calculator.MVVM.ViewModels
                 }
             });
         }
+        
 		private void RemoveVariable(object key)
 		{
 			if (key is string keyValue)
 			{
-				if (_variables.ContainsKey(keyValue))
+				if (Variables.ContainsKey(keyValue))
 				{
-					Variables.Remove(keyValue);
-					CollectionViewSource.GetDefaultView(Variables).Refresh();
+                    PostfixCalculator.Variables.RemoveVariable(keyValue);
+                    OnPropertyChanged("Variables");
 				}
 			}
 		}
         
+        private void RemoveFunction(object key)
+        {
+			if (key is string keyValue)
+			{
+				if (Functions.ContainsKey(keyValue))
+				{
+					PostfixCalculator.Functions.RemoveFunction(keyValue);
+					OnPropertyChanged("Functions");
+					OnPropertyChanged("ViewFunctions");
+					CollectionViewSource.GetDefaultView(_postfixCalculator.Functions.Functions).Refresh();
+				}
+			}
+		}
 	}
 }

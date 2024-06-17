@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Calculator.MVVM.ViewModels
@@ -22,18 +23,24 @@ namespace Calculator.MVVM.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public ICommand AcceptCommand
         {
             get => new RelayCommand(c =>
             {
-               // Add Variable to dictionary here
-               //var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-               // mainWindowViewModel.Variables
-               throw new NotImplementedException();
+                var mainWindowViewModel = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                try
+                {
+                    mainWindowViewModel.PostfixCalculator.Variables.Calculate(VariableExpression);
+					CollectionViewSource.GetDefaultView(mainWindowViewModel.Variables).Refresh();
+                    mainWindowViewModel.OnPropertyChanged("Variables");
+                    WindowsHelper.CloseWindow(this);
+				}
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             });
         }
-
         public ICommand CloseCommand
         {
             get => new RelayCommand(c =>

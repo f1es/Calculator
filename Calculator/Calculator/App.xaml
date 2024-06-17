@@ -10,12 +10,14 @@
                 <ResourceDictionary Source="/Themes/LightGrayButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/PurpleButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/UpperPanelButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Themes/CloseButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/TransparentButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/DeleteButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/Fonts.xaml"/>
                 <ResourceDictionary Source="/Themes/TextBoxStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/SmallTextBlockStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/DataGridValueStyle.xaml"/>
+                <ResourceDictionary Source="/Themes/DataGridFunctionValueStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/DataGridKeyStyle.xaml"/>
                 <ResourceDictionary Source="/Themes/ScrollBarStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>

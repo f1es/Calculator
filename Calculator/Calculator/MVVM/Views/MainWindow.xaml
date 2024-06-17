@@ -58,20 +58,10 @@
                         </Button>
 
                         <!--Close-->
-                        <Button Style="{StaticResource UpperPanelButton}"
-                                Background="#FF421A1A"
+                        <Button Style="{StaticResource CloseButton}"
                                 Content="X"
                                 Command="{Binding CloseCommand}">
-                            <Button.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="0 24 0 0"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#FF5F2222"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Resources>
+                            
                         </Button>
 
                     </WrapPanel>
@@ -130,13 +120,73 @@
                                FontFamily="{StaticResource WorkSansLight}"
                                FontSize="18"
                                VerticalAlignment="Bottom"
-                               Margin="80,0,0,7"/>
+                               Margin="90,0,0,7"/>
 
-                    <StackPanel Grid.Row="1">
-                    <!--<Button Content="Add" FontSize="24" Margin="5" Foreground="#4B5EFC"/>
-                        <Button Content="Del" FontSize="24" Margin="5" Foreground="#4B5EFC"/>
-                        <Button Content="Edit" FontSize="24" Margin="5" Foreground="#4B5EFC"/>-->
-                    </StackPanel>
+                    <DataGrid Grid.Row="1"
+                              Background="Transparent"
+                              HeadersVisibility="None"
+                              BorderThickness="0"
+                              ItemsSource="{Binding ViewFunctions}"
+                              RowBackground="Transparent" 
+                              GridLinesVisibility="None"
+                              Foreground="White"
+                              FontFamily="{StaticResource WorkSans}"
+                              AutoGenerateColumns="False"
+                              MinRowHeight="25"
+                              SelectionMode="Single"
+                              SelectionUnit="Cell"
+                              IsReadOnly="True">
+
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell">
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="{x:Type ScrollBar}"
+                                   BasedOn="{StaticResource ScrollBar}"/>
+                        </DataGrid.Resources>
+
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Margin" Value="0,0,0,5"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Key" 
+                                                Binding="{Binding Key}" 
+                                                DisplayIndex="0"
+                                                ElementStyle="{StaticResource KeyTextboxStyle}"
+                                                EditingElementStyle="{StaticResource KeyTextboxStyle}">
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Value" 
+                                                Binding="{Binding Path=Value}"
+                                                DisplayIndex="1" 
+                                                ElementStyle="{StaticResource FunctionValueTextboxStyle}"
+                                                EditingElementStyle="{StaticResource FunctionValueTextboxStyle}">
+                            </DataGridTextColumn>
+
+                            <DataGridTemplateColumn DisplayIndex="2">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Del"
+                                                Style="{StaticResource TransparentyButton}"
+                                                VerticalAlignment="Top"
+                                                Foreground="#4B5EFC"
+                                                Command="{Binding DataContext.RemoveFunctionCommand, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                CommandParameter="{Binding Key}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
                 
             </Border>
@@ -210,7 +260,7 @@
                             Command="{Binding PrintThreeCommand}"/>
                     <Button Content="=" Style="{StaticResource PurpleButton}"
                             Command="{Binding CalculateCommand}"/>
-                    <Button Content="," Style="{StaticResource GrayButton}"
+                    <Button Content="." Style="{StaticResource GrayButton}"
                             Command="{Binding PrintDotCommand}"/>
                     <Button Content="0" Style="{StaticResource GrayButton}"
                             Command="{Binding PrintZeroCommand}"/>
@@ -277,7 +327,7 @@
                               Background="Transparent"
                               HeadersVisibility="None"
                               BorderThickness="0"
-                              ItemsSource="{Binding Variables, Mode=TwoWay}"
+                              ItemsSource="{Binding Variables}"
                               RowBackground="Transparent" 
                               GridLinesVisibility="None"
                               Foreground="White"
@@ -330,7 +380,7 @@
                                                 Style="{StaticResource TransparentyButton}"
                                                 VerticalAlignment="Top"
                                                 Foreground="#4B5EFC"
-                                                Command="{Binding DataContext.DeleteVariableCommand, 
+                                                Command="{Binding DataContext.RemoveVariableCommand, 
                                                 RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                                 CommandParameter="{Binding Key}"/>
                                     </DataTemplate>
@@ -338,6 +388,7 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
+                    
                 </Grid>
             </Border>
         </Grid>
